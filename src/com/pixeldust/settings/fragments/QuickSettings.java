@@ -54,6 +54,11 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
     private static final String QS_QUICK_PULLDOWN = "quick_settings_quick_pull_down";
     private Preference mQsQuickPulldown;
 
+    private static final String STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD = "status_bar_locked_on_secure_keyguard";
+    private static final String QS_TILE_REQUIRES_UNLOCKING = "qstile_requires_unlocking";
+    private SwitchPreference mQsLocked;
+    private Preference mQsTileUnlocking;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -69,6 +74,19 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
 
         mQsQuickPulldown = (Preference) findPreference(QS_QUICK_PULLDOWN);
         mQsQuickPulldown.setOnPreferenceClickListener(this);
+
+        mQsLocked = (SwitchPreference) findPreference(STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD);
+        boolean mIsQsLocked = Settings.Secure.getInt(getActivity().getContentResolver(),
+                Settings.Secure.STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD, 0) == 1;
+        mQsLocked.setChecked(mIsQsLocked);
+        mQsLocked.setOnPreferenceChangeListener(this);
+
+        mQsTileUnlocking = findPreference(QS_TILE_REQUIRES_UNLOCKING);
+        updateToggle(mIsQsLocked);
+    }
+
+    private void updateToggle(boolean mode) {
+        mQsTileUnlocking.setEnabled(!mode);
     }
 
     @Override
@@ -81,6 +99,12 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
                     Settings.System.QS_PANEL_BG_ALPHA, bgAlpha,
                     UserHandle.USER_CURRENT);
             return true;
+        } else if (preference == mQsLocked) {
+            boolean mode = (Boolean) newValue;
+            Settings.Secure.putIntForUser(getContentResolver(),
+                    Settings.Secure.STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD,
+                    mode ? 1 : 0, UserHandle.USER_CURRENT);
+            updateToggle(mode);
         }
         return false;
     }
