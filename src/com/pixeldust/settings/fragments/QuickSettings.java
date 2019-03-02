@@ -75,18 +75,19 @@ public class QuickSettings extends SettingsPreferenceFragment implements OnPrefe
         mQsQuickPulldown = (Preference) findPreference(QS_QUICK_PULLDOWN);
         mQsQuickPulldown.setOnPreferenceClickListener(this);
 
+        mQsTileUnlocking = findPreference(QS_TILE_REQUIRES_UNLOCKING);
         mQsLocked = (SwitchPreference) findPreference(STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD);
         boolean mIsQsLocked = Settings.Secure.getInt(getActivity().getContentResolver(),
                 Settings.Secure.STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD, 0) == 1;
-        mQsLocked.setChecked(mIsQsLocked);
+
+        updateToggle(mIsQsLocked);
         mQsLocked.setOnPreferenceChangeListener(this);
 
-        mQsTileUnlocking = findPreference(QS_TILE_REQUIRES_UNLOCKING);
-        updateToggle(mIsQsLocked);
     }
 
     private void updateToggle(boolean mode) {
         mQsTileUnlocking.setEnabled(!mode);
+        mQsLocked.setChecked(mode);
     }
 
     @Override
