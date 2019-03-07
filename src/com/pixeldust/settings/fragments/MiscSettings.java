@@ -38,7 +38,11 @@ import java.util.List;
 
 public class MiscSettings extends SettingsPreferenceFragment implements Indexable, Preference.OnPreferenceChangeListener {
 
+    public static final String TAG = "Misc";
+    
     private static final String BURN_INTERVAL_KEY = "burn_in_protection_interval";
+    private static final String KEY_DEVICE_PART = "advanced_controls";
+    private static final String KEY_DEVICE_PART_PACKAGE_NAME = "com.thht.settings.device";
 
     private SystemSettingSeekBarPreference mBurnInterval;
 
@@ -47,6 +51,12 @@ public class MiscSettings extends SettingsPreferenceFragment implements Indexabl
         super.onCreate(icicle);
 
         addPreferencesFromResource(R.xml.pixeldust_settings_misc);
+        
+        // Advanced Controls
+        if (!com.havoc.settings.preferences.Utils.isPackageInstalled(getActivity(), KEY_DEVICE_PART_PACKAGE_NAME)) {
+            getPreferenceScreen().removePreference(findPreference(KEY_DEVICE_PART));
+        }
+        
         ContentResolver resolver = getActivity().getContentResolver();
 
         mBurnInterval = (SystemSettingSeekBarPreference) findPreference(BURN_INTERVAL_KEY);
