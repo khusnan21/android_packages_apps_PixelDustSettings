@@ -967,5 +967,8 @@
     <string name="wakeup_when_plugged_unplugged_title">Wake up on charge</string>
     <string name="wakeup_when_plugged_unplugged_summary">Wake up device if charger is plugged/unplugged.</string>
     <string name="wake_cat">Wake option</string>
-
+     
+    <!-- Advanced Controls -->
+    <string name="advanced_controls_title">Advanced Controls</string>
+     
 </resources>
